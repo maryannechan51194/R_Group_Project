@@ -1,0 +1,132 @@
+---
+title: "Lab_2 Group_Assigment"
+author: "Group_6"
+output:
+  html_document:
+    df_print: paged
+---
+## Iris dataset
+
+ Iris, introduced by Ronald Fisher in his 1936 paper The use of multiple measurements in taxonomic problems, contains three plant species (setosa, virginica, versicolor) and four features measured for each sample. These quantify the morphologic variation of the iris flower in its three species, all measurements given in centimeters.
+
+### First lets explore datset
+```{r}
+library("tidyverse")
+library("cowplot")
+library("GGally")
+library("corrplot")
+data(iris)
+head(iris)
+```
+```{r}
+summary(iris)
+```
+```{r}
+setosa = filter(iris, Species == 'setosa')
+versicolor = filter(iris, Species == 'versicolor')
+virginica = filter(iris,Species == 'virginica')
+summary(setosa)
+summary(versicolor)
+summary(virginica)
+```
+
+### Visualization and Analysis
+
+#### Chart_1
+```{r}
+ggplot(iris, aes(y = Sepal.Length , x = Sepal.Width)) + geom_point(aes(color = Species), size = 3)
+```
+#### Analysis/Comments
+
+#### Chart_2
+```{r}
+ggplot(iris, aes(y = Petal.Length , x = Petal.Width)) + geom_point(aes(color = Species), size = 3)
+```
+#### Analysis/Comments
+
+#### Chart_3 
+
+```{r}
+d1 = ggplot( data=iris, aes(x=Sepal.Width, color = Species)) + 
+  geom_histogram(fill="skyblue", alpha=0.5,binwidth=0.2) +
+  theme_minimal()
+d2 = ggplot( data=iris, aes(x=Sepal.Length, color = Species)) + 
+  geom_histogram(fill="skyblue", alpha=0.5,binwidth=0.2) +
+  theme_minimal()
+
+d3 = ggplot( data=iris, aes(x=Petal.Width, color = Species)) + 
+  geom_histogram(fill="skyblue", alpha=0.5,binwidth=0.2) +
+  theme_minimal()
+d4 = ggplot( data=iris, aes(x=Petal.Length, color = Species)) + 
+  geom_histogram(fill="skyblue", alpha=0.5,binwidth=0.2) +
+  theme_minimal()
+```
+```{r}
+plot_grid(d1, d2, d3, d4 , 
+          labels = c("A", "B", "C",'D'),
+          ncol = 2, nrow = 2)
+```
+
+
+## Overall Chart
+```{r}
+ggpairs(iris, mapping=ggplot2::aes(colour=Species))
+```
+#### Analysis/Comments
+By Species, setosa, versicolor, and virginica, we can read various distributions.
+First, each diagonal positioned graph shows probability density functions. We can estimate distribution. For example, in petal features, we can see setosa has smaller mean and more centralized compare to the other two features.
+Second, we can read distribution as well as correlation between each features from second to fourth lines of chart. For example, between sepal length and width, versicolor has strong correlation compare to the otehr factors.
+Last, at the fifth line, we can see histogram and box plot and with these info we can see outline of the distribution.
+
+## Mtcars dataset
+
+MTcars data set has data on the design, performance and fuel economy for 32 automobiles from 1973 - 1974. All of the data therein was extracted from the 1974 Motor Trend US magazine.
+
+### First lets explore datset
+
+```{r}
+data("mtcars")
+head(mtcars)
+```
+
+```{r}
+summary(mtcars)
+```
+
+### Visualization and Analysis
+```{r}
+mtcars$gear = factor(mtcars$gear,levels=c(3,4,5),
+   labels=c("3_Gears","4_Gears","5_Gears"))
+```
+
+#### Chart_1 Distribution of Gas Milage
+```{r}
+qplot(mpg, data=mtcars, geom="density", fill=gear, alpha=I(0.3),
+   xlab="Miles Per Gallon",   ylab="Density")
+```
+#### Analysis/Comments
+
+#### Chart_2 Mileage by Gear Number
+```{r}
+qplot(gear, mpg, data=mtcars, geom=c("boxplot"),
+   fill=gear,   xlab="", ylab="Miles per Gallon")
+```
+
+## Correlation
+```{r}
+data(mtcars)
+car_cor=cor(mtcars[,1:11])
+round(car_cor,2)
+```
+#### Analysis/Comments
+It shows correlationship between each feature, however, hard to figure out at glance.
+
+
+## Visualize Correlation
+```{r}
+corrplot(car_cor)
+```
+#### Analysis/Comments
+It describes exactly same data as above table. By visualizing, however, we can read more easily.
+First, the size of the circle means abolute value of the correlation. The bigger the circle, the more correlated. For example, hp has strong correlation with mpg, cyl, and disp, on the other hand, weak correlation with am and gear.
+Second, the color shows sign. Blue means positive correlation, while red means negative correlation. For example, hp has strong negative correlation with mpg, however, strong positive correlation with cyl and disp.

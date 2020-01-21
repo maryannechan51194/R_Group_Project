@@ -63,7 +63,7 @@ d4 = ggplot( data=iris, aes(x=Petal.Length, color = Species)) +
 ```
 ```{r}
 plot_grid(d1, d2, d3, d4 , 
-          labels = c("A", "B", "C",'D'),
+#          labels = c("A", "B", "C",'D'),
           ncol = 2, nrow = 2)
 ```
 
